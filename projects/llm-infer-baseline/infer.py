@@ -8,8 +8,12 @@ from metrics import log_stats, timed
 from model import load_model
 from tokenizer import load_tokenizer
 
-PROMPT = "Explain why batching improves GPU utilization."
+PROMPT = "Q: Explain why batching improves GPU utilization.\nA:"
 MAX_NEW_TOKENS = 50
+
+
+def _make_whitespace_visible(text: str) -> str:
+    return text.replace("\r", "\\r").replace("\t", "\\t").replace("\n", "\\n")
 
 
 def main() -> None:
@@ -33,10 +37,20 @@ def main() -> None:
             )
 
     with timed("decode", stats):
-        text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        prompt_len = inputs["input_ids"].shape[-1]
+        generated_ids = outputs[0][prompt_len:]
+        generated_text = tokenizer.decode(generated_ids, skip_special_tokens=True)
+        full_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     print("\n=== OUTPUT ===")
-    print(text)
+    if generated_text.strip() == "":
+        print("(模型主要生成了空白字符；下面用可见形式展示生成结果)")
+        print(_make_whitespace_visible(generated_text))
+    else:
+        print(generated_text)
+
+    print("\n=== FULL TEXT (prompt + generated) ===")
+    print(full_text)
     print()
     print(log_stats(stats))
 

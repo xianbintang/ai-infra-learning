@@ -8,7 +8,7 @@ from config import DEVICE, DTYPE
 
 
 def load_model(model_name: str):
-    model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=DTYPE)
+    model = AutoModelForCausalLM.from_pretrained(model_name, dtype=DTYPE)
     model.to(DEVICE)
     model.eval()
     return model
