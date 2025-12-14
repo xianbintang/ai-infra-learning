@@ -24,6 +24,8 @@ llm_infer_baseline/
 
 **目的**：清楚一次推理请求的完整耗时构成，建立首份基准数据。
 
+> 依赖：`pip install -r requirements.txt`（首次运行前），推荐 `python3` 运行并在 `projects/llm-infer-baseline/` 目录下执行 `python3 infer.py`。
+
 1. **配置环境**
    - `config.py` 中定义 `DEVICE`, `DTYPE`, `MODEL_NAME = "distilgpt2"`。
    - 运行脚本前打印硬件信息（CPU/GPU/显存）。

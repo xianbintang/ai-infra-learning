@@ -21,3 +21,18 @@ token/s           :
 GPU Utilization   :
 Notes             :
 ```
+
+---
+
+## Experiment: day1-baseline-setup
+Date: 2024-XX-XX
+Hardware: Apple Silicon M4 (CPU inference, no dedicated GPU)
+Model: distilgpt2 @ fp32
+Prompt: "Explain why batching improves GPU utilization."
+Batch policy: single request (no batching)
+KV Cache: default (on)
+
+Metrics
+-------
+Status: Pending first successful run (Torch/Transformers installation required).
+Notes : Repository scaffolded (`config.py`, `metrics.py`, `tokenizer.py`, `model.py`, `infer.py`), ready to execute once dependencies are installed via `pip install -r requirements.txt`.
