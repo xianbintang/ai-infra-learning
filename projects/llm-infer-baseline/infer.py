@@ -28,13 +28,30 @@ def main() -> None:
     with timed("tokenize", stats):
         inputs = tokenizer(PROMPT, return_tensors="pt").to(DEVICE)
 
-    with timed("forward_generate", stats):
+    with timed("prefill", stats):
         with torch.no_grad():
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=MAX_NEW_TOKENS,
-                do_sample=False,
+            prefill_outputs = model(
+                input_ids=inputs["input_ids"],
+                use_cache=True,
             )
+    logits = prefill_outputs.logits
+    past_key_values = prefill_outputs.past_key_values
+    next_token_logits = logits[:, -1, :]
+    print("logits shape:", logits.shape)
+    next_token_ids = torch.argmax(next_token_logits, dim=-1, keepdim=True)
+    print("next_token_ids:", next_token_ids)
+    print("next_token_logits:", next_token_logits)
+    print("past_key_values:", past_key_values)
+    print("logits:", logits)
+    
+
+    # with timed("forward_generate", stats):
+    #     with torch.no_grad():
+    #         outputs = model.generate(
+    #             **inputs,
+    #             max_new_tokens=MAX_NEW_TOKENS,
+    #             do_sample=False,
+    #         )
 
     with timed("decode", stats):
         prompt_len = inputs["input_ids"].shape[-1]
